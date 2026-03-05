@@ -62,7 +62,7 @@ function CabinRow({ cabin }) {
     <>
       <TableRow role="row">
         {" "}
-        <Img src={image || "https://via.placeholder.com/96x64?text=Cabin"} alt={name} />
+        {image ? <Img src={image} alt={name} /> : <span>-</span>}
         <Cabin>{name}</Cabin>
         <div>Fits up to {maxCapacity} guests</div>
         <Price>{formatCurrency(regularPrice)}</Price>

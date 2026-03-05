@@ -4,9 +4,26 @@ export async function getCabins() {
   const { data, error } = await supabase
     .from("cabins")
     .select(
-      "id, created_at, name, maxCapacity, regularPrice, discount, description",
+      "id, created_at, name, maxCapacity, regularPrice, discount, description, image",
     )
     .order("created_at", { ascending: false });
+
+  // Backward compatibility for schemas that do not have an `image` column.
+  if (error && error.message?.includes("column") && error.message?.includes("image")) {
+    const { data: fallbackData, error: fallbackError } = await supabase
+      .from("cabins")
+      .select(
+        "id, created_at, name, maxCapacity, regularPrice, discount, description",
+      )
+      .order("created_at", { ascending: false });
+
+    if (fallbackError) {
+      console.error(fallbackError);
+      throw new Error("Cabins could not be loaded");
+    }
+
+    return fallbackData;
+  }
 
   if (error) {
     console.error(error);
@@ -24,6 +41,7 @@ export async function createEditCabin(newCabin, id) {
     discount: Number(newCabin.discount),
     description: newCabin.description,
   };
+  if (typeof newCabin.image === "string") payload.image = newCabin.image;
 
   let query = supabase.from("cabins");
 
