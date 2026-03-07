@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { HiXMark } from "react-icons/hi2";
 import { cloneElement, createContext, useContext, useState } from "react";
 import { createPortal } from "react-dom";
+import { useOutsideClick } from "../hooks/useOutsideClick";
 
 const StyledModal = styled.div`
   position: fixed;
@@ -70,17 +71,21 @@ function Open({ children, opens: opensWindowName }) {
   const { open } = useContext(ModalContext);
 
   return cloneElement(children, {
-    onClick: () => open(opensWindowName),
+    onClick: (e) => {
+      children.props.onClick?.(e);
+      open(opensWindowName);
+    },
   });
 }
 
 function Window({ children, name }) {
   const { openName, close } = useContext(ModalContext);
-  if (name !== openName) return null;
+  const ref = useOutsideClick(close);
 
+  if (name !== openName) return null;
   return createPortal(
     <Overlay onClick={close}>
-      <StyledModal onClick={(e) => e.stopPropagation()}>
+      <StyledModal ref={ref}>
         <Button onClick={close}>
           <HiXMark />
         </Button>
