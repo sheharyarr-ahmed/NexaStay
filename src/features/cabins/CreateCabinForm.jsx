@@ -9,7 +9,7 @@ import FormRow from "../../ui/FormRow";
 import { useCreateCabin } from "./useCreateCabin";
 import { useEditCabin } from "./useEditCabin";
 
-function CreateCabinForm({ cabinToEdit = {}, onCloseForm }) {
+function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
   const { id: editId, ...editValues } = cabinToEdit;
   const isEditSession = Boolean(editId);
 
@@ -36,7 +36,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseForm }) {
         {
           onSuccess: () => {
             reset();
-            onCloseForm?.();
+            onCloseModal?.();
           },
         },
       );
@@ -46,7 +46,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseForm }) {
     createCabin(normalizedData, {
       onSuccess: () => {
         reset();
-        onCloseForm?.();
+        onCloseModal?.();
       },
     });
   }
@@ -56,7 +56,10 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseForm }) {
   }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+    <Form
+      onSubmit={handleSubmit(onSubmit, onError)}
+      type={onCloseModal ? "modal" : "regular"}
+    >
       <FormRow label="Cabin name" error={errors?.name?.message}>
         <Input
           type="text"
@@ -131,7 +134,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseForm }) {
           variation="secondary"
           type="reset"
           disabled={isWorking}
-          onClick={() => onCloseForm?.()}
+          onClick={() => onCloseModal?.()}
         >
           Cancel
         </Button>
@@ -152,7 +155,7 @@ CreateCabinForm.propTypes = {
     discount: PropTypes.number,
     description: PropTypes.string,
   }),
-  onCloseForm: PropTypes.func,
+  onCloseModal: PropTypes.func,
 };
 
 export default CreateCabinForm;
