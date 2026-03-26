@@ -61,20 +61,15 @@ export async function createEditCabin(newCabin, id) {
 }
 
 export async function deleteCabin(id) {
-  const { error: bookingsError } = await supabase
-    .from("bookings")
-    .delete()
-    .eq("cabinId", id);
-
-  if (bookingsError) {
-    console.error(bookingsError);
-    throw new Error("Cabin bookings could not be deleted");
-  }
-
   const { data, error } = await supabase.from("cabins").delete().eq("id", id);
 
   if (error) {
     console.error(error);
+    if (error.code === "23503") {
+      throw new Error(
+        "Cabin delete is blocked by the database foreign key. Apply the cascade migration for bookings.cabinId first.",
+      );
+    }
     throw new Error("Cabin could not be deleted");
   }
 
