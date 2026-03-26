@@ -17,7 +17,7 @@ function AddCabin() {
           <Button style={{ width: "100%" }}>Add new cabin</Button>
         </Modal.Open>
         <Modal.Open opens="cabin-table">
-          <Button style={{ width: "100%" }}>
+          <Button style={{ width: "100%" }} variation="secondary">
             Show table
           </Button>
         </Modal.Open>
