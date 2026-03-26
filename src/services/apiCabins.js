@@ -65,11 +65,6 @@ export async function deleteCabin(id) {
 
   if (error) {
     console.error(error);
-    if (error.code === "23503") {
-      throw new Error(
-        "Cabin delete is blocked by the database foreign key. Apply the cascade migration for bookings.cabinId first.",
-      );
-    }
     throw new Error("Cabin could not be deleted");
   }
 
