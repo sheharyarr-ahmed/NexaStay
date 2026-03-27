@@ -7,7 +7,7 @@ import FormRow from "../../ui/FormRow";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { addCabin } from "../../services/apicabins";
+import { addCabin } from "../../services/apiCabins";
 
 function CreateCabinForm() {
   const { register, handleSubmit, reset, formState, getValues } = useForm();
